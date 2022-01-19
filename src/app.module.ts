@@ -1,20 +1,17 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import configuration from './config/configuration';
-import { PriceModule } from './modules/price/price.module';
-import { BookingModule } from './modules/booking/booking.module';
-import { AccountModule } from './modules/account/account.module';
-import { CarModule } from './modules/cars/car.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { AppController } from './app.controller';
+import {typeOrmConfigAsync} from "./config/configuration";
+import {TestModule} from "./modules/test/test.module";
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      load: [configuration],
-    }),
-    PriceModule,
-    BookingModule,
-    AccountModule,
-    CarModule,
+    ConfigModule.forRoot({ isGlobal: true }),
+    TypeOrmModule.forRootAsync(typeOrmConfigAsync),
+    TestModule
   ],
+  controllers: [AppController],
+  providers: []
 })
 export class AppModule {}

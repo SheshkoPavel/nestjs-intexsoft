@@ -5,7 +5,10 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  const port = parseInt(process.env.APP_PORT, 10) || 3000
+
   app.useGlobalPipes(new ValidationPipe());
+
   const options = new DocumentBuilder()
       .setTitle('Test task')
       .setDescription('calculating the cost of car rental\n')
@@ -15,6 +18,6 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('swagger', app, document);
 
-  await app.listen(parseInt(process.env.APP_PORT, 10) || 3000);
+  await app.listen(port);
 }
 bootstrap();
