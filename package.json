@@ -31,6 +31,7 @@
     "@types/pg": "^8.6.0",
     "class-transformer": "^0.4.0",
     "class-validator": "^0.13.1",
+    "cors": "^2.8.5",
     "fastify-swagger": "^4.9.1",
     "pg": "^8.7.1",
     "reflect-metadata": "^0.1.13",

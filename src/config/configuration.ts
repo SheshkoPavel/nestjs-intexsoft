@@ -1,6 +1,7 @@
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { TypeOrmModuleAsyncOptions, TypeOrmModuleOptions } from '@nestjs/typeorm'
-import {TestEntity} from "../entity/test-entity";
+import {TodoEntity} from '../entity/todo-entity';
+import {UserEntity} from '../entity/user-entity';
 
 export class TypeOrmConfig {
   static getOrmConfig (configService: ConfigService): TypeOrmModuleOptions {
@@ -11,7 +12,7 @@ export class TypeOrmConfig {
       username: configService.get('POSTGRES_USER'),
       password: configService.get('POSTGRES_PASSWORD'),
       database: configService.get('POSTGRES_DB'),
-      entities: [TestEntity],
+      entities: [TodoEntity, UserEntity],
       synchronize: false,
       logging: false,
     }
