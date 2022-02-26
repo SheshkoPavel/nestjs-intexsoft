@@ -4,21 +4,22 @@ import {AddTodoDto} from './dto/add-todo.dto';
 import {DeleteTodoDto} from './dto/delete-todo.dto';
 import {TodoEntity} from '../../entity/todo-entity';
 import {EditTodoDto} from './dto/edit-todo.dto';
+import {TodoDto} from "./dto/todo.dto";
 
 @Injectable()
 export class TodoService {
     constructor ( private readonly todoRepository: TodoRepository ) { }
 
-    async getAll (): Promise<TodoEntity[]> {
-        return await this.todoRepository.find()
+    async getAll () {
+        return await this.todoRepository.find() as unknown as TodoDto[]
     }
 
     async save (addTodoDto: AddTodoDto) {
         return await this.todoRepository.save(addTodoDto)
     }
 
-    async delete(deleteTodoDto: DeleteTodoDto) {
-        return await this.todoRepository.delete(deleteTodoDto.id)
+    async delete(id: number) {
+        return await this.todoRepository.delete(id)
     }
 
     async edit(editTodoDto: EditTodoDto) {

@@ -1,9 +1,10 @@
-import {Get, Controller, Post, Body, Query, Delete, Patch} from '@nestjs/common'
+import {Get, Controller, Post, Body, Query, Delete, Patch, Param} from '@nestjs/common'
 import {AddTodoDto} from './dto/add-todo.dto';
 import {DeleteTodoDto} from './dto/delete-todo.dto';
 import {Todo} from './model/todo.model';
 import {EditTodoDto} from './dto/edit-todo.dto';
 import {TodoService} from './todo.service';
+import {TodoDto} from "./dto/todo.dto";
 
 @Controller('todo')
 export class TodoController {
@@ -16,9 +17,9 @@ export class TodoController {
         this.todoService.save(body);
     }
 
-    @Delete('/delete')
-    async delete (@Body() body: DeleteTodoDto) {
-       this.todoService.delete(body);
+    @Delete(':id')
+    async delete (@Param('id') id: number) {
+       this.todoService.delete(id);
     }
 
     @Patch('/edit')
@@ -27,7 +28,7 @@ export class TodoController {
     }
 
     @Get("/getAll")
-    async getAll () {
+    async getAll (): Promise<TodoDto[]> {
         return this.todoService.getAll()
     }
 
