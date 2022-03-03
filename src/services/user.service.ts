@@ -1,12 +1,14 @@
 import { Injectable } from '@nestjs/common'
-import {UserRepository} from './user.repository';
-import {RegisterUserDto} from './dto/register-user.dto';
-import {UpdateUserDto} from "./dto/update-user.dto";
+import {UserRepository} from "./user.repository";
+import {RegisterUserDto} from "../common/dto/user/register-user.dto";
+import {UpdateUserDto} from "../common/dto/user/update-user.dto";
+import {JwtService} from "@nestjs/jwt";
 var createHash = require('hash-generator');
 
 @Injectable()
 export class UserService {
-    constructor ( private readonly userRepository: UserRepository ) { }
+    constructor ( private readonly userRepository: UserRepository,
+                  private readonly jwtService: JwtService ) { }
 
     async register (registerUserDto: RegisterUserDto) {
         const user = await this.userRepository.findOne({login: registerUserDto.login})
@@ -34,5 +36,22 @@ export class UserService {
             return 'User have been update'
         }
         return 'User missed'
+    }
+
+    getToken({ username, id }: { username: string; id: string }): {
+        token: string;
+    } {
+        return { token: this.jwtService.sign({ username, id }) };
+    }
+
+    async findUser({ username, password }: { username: string; password: string }): Promise<{
+        id: string;
+        username: string;
+    }> {
+        const user = await this.userRepository.findOne({login: username});
+        if (!user || user.pass !== password) {
+            return null;
+        }
+        return {id: user.id.toString(), username: user.login};
     }
 }

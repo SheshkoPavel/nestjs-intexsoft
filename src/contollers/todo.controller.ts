@@ -1,10 +1,9 @@
-import {Get, Controller, Post, Body, Query, Delete, Patch, Param} from '@nestjs/common'
-import {AddTodoDto} from './dto/add-todo.dto';
-import {DeleteTodoDto} from './dto/delete-todo.dto';
-import {Todo} from './model/todo.model';
-import {EditTodoDto} from './dto/edit-todo.dto';
-import {TodoService} from './todo.service';
-import {TodoDto} from "./dto/todo.dto";
+import {Get, Controller, Post, Body, Query, Delete, Patch, Param, UseGuards} from '@nestjs/common'
+import {TodoService} from "../services/todo.service";
+import {AddTodoDto} from "../common/dto/todo/add-todo.dto";
+import {EditTodoDto} from "../common/dto/todo/edit-todo.dto";
+import {TodoDto} from "../common/dto/todo/todo.dto";
+import {AuthGuard} from "../lib";
 
 @Controller('todo')
 export class TodoController {
@@ -27,6 +26,7 @@ export class TodoController {
       this.todoService.edit(body)
     }
 
+    @UseGuards(AuthGuard('jwt'))
     @Get("/getAll")
     async getAll (): Promise<TodoDto[]> {
         return this.todoService.getAll()
