@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common'
+import {HttpException, HttpStatus, Injectable} from '@nestjs/common'
 import {UserRepository} from "./user.repository";
 import {RegisterUserDto} from "../common/dto/user/register-user.dto";
 import {UpdateUserDto} from "../common/dto/user/update-user.dto";
 import {JwtService} from "@nestjs/jwt";
-var createHash = require('hash-generator');
+import * as bcrypt from 'bcrypt'
 
 @Injectable()
 export class UserService {
@@ -14,11 +14,14 @@ export class UserService {
         const user = await this.userRepository.findOne({login: registerUserDto.login})
 
         if(!user) {
-            registerUserDto.pass = createHash(registerUserDto.pass);
-            return this.userRepository.save(registerUserDto);
+            registerUserDto.pass = await bcrypt.hash(registerUserDto.pass, 12)
+            return await this.userRepository.save(registerUserDto);
         }
 
-        return 'User already created'
+        throw new HttpException({
+            status: HttpStatus.BAD_REQUEST,
+            error: 'user already exist'
+        }, HttpStatus.BAD_REQUEST)
     }
 
 
@@ -49,9 +52,21 @@ export class UserService {
         username: string;
     }> {
         const user = await this.userRepository.findOne({login: username});
-        if (!user || user.pass !== password) {
-            return null;
+
+
+        const isPasswordMatch = await new Promise((res) => {
+            bcrypt.compare(password, user.pass, function(err, result) {
+                if(!err && result) {
+                    res(true)
+                }
+                res(false)
+            });
+        })
+
+
+        if (isPasswordMatch) {
+            return {id: user.id.toString(), username: user.login};
         }
-        return {id: user.id.toString(), username: user.login};
+        return null;
     }
 }

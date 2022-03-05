@@ -11,16 +11,19 @@ export class TodoController {
     constructor(private readonly todoService: TodoService) {
     }
 
+    @UseGuards(AuthGuard('jwt'))
     @Post('/add')
     async add (@Body() body: AddTodoDto) {
         this.todoService.save(body);
     }
 
+    @UseGuards(AuthGuard('jwt'))
     @Delete(':id')
     async delete (@Param('id') id: number) {
        this.todoService.delete(id);
     }
 
+    @UseGuards(AuthGuard('jwt'))
     @Patch('/edit')
     async edit (@Body() body: EditTodoDto) {
       this.todoService.edit(body)

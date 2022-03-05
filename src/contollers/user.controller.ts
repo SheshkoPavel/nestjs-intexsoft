@@ -12,14 +12,16 @@ export class UserController {
 
     @Post('/register')
     async add (@Body() body: RegisterUserDto) {
-        this.userService.register(body);
+        await this.userService.register(body);
     }
 
+    @UseGuards(AuthGuard('jwt'))
     @Delete(':id')
     async delete (@Param('id') id: number) {
         return this.userService.delete(id);
     }
 
+    @UseGuards(AuthGuard('jwt'))
     @Patch('/patch')
     async patch(@Body() body: UpdateUserDto ) {
         return this.userService.patch(body);
