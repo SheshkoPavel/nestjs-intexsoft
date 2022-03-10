@@ -1,5 +1,6 @@
 import {Column, Entity, ManyToOne, PrimaryGeneratedColumn} from 'typeorm'
 import {UserEntity} from "./user-entity";
+import {JoinColumn} from "typeorm/browser";
 
 @Entity({ name: 'todo' })
 export class TodoEntity {
@@ -13,4 +14,6 @@ export class TodoEntity {
     })
     name?: string
 
+    @ManyToOne(() => UserEntity, (user) => user.id, { nullable: true })
+    user: UserEntity
 }

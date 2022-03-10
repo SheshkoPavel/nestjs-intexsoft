@@ -3,6 +3,7 @@ import {UserService} from "../services/user.service";
 import {RegisterUserDto} from "../common/dto/user/register-user.dto";
 import {UpdateUserDto} from "../common/dto/user/update-user.dto";
 import {AuthGuard} from "../lib";
+import {JwtPayload} from "./models/jwt.payload";
 
 @Controller('user')
 export class UserController {

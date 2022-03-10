@@ -4,6 +4,7 @@ import {RegisterUserDto} from "../common/dto/user/register-user.dto";
 import {UpdateUserDto} from "../common/dto/user/update-user.dto";
 import {JwtService} from "@nestjs/jwt";
 import * as bcrypt from 'bcrypt'
+import {JwtPayload} from "../contollers/models/jwt.payload";
 
 @Injectable()
 export class UserService {
@@ -41,10 +42,10 @@ export class UserService {
         return 'User missed'
     }
 
-    getToken({ username, id }: { username: string; id: string }): {
+    getToken(jwtPayload: JwtPayload): {
         token: string;
     } {
-        return { token: this.jwtService.sign({ username, id }) };
+        return { token: this.jwtService.sign(jwtPayload) };
     }
 
     async findUser({ username, password }: { username: string; password: string }): Promise<{
