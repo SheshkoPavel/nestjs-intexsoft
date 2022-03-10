@@ -13,4 +13,26 @@ export class TodoRepository extends Repository<TodoEntity> {
         return null
 
     }
+
+    search(searchText: string, userId: number, page: number, itemsPerPage: number) {
+        const offset = (page - 1) * itemsPerPage;
+        return this.query(`
+        select *
+        from todo
+        where name LIKE '%${searchText}%'
+          and "userId" = ${userId}
+        offset ${offset}
+        limit ${itemsPerPage}
+        `)
+    }
+
+    getAmountItemsByCriteria(searchText: string, userId: number) {
+        return this.query(`
+            select count(*)
+            from todo
+            where name LIKE '%${searchText}%'
+              and "userId" = ${userId}
+        `)
+    }
+
 }

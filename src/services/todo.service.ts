@@ -44,4 +44,13 @@ export class TodoService {
             }, HttpStatus.FORBIDDEN)
         }
     }
+
+    async search(searchText: string, userId: number, page: string, itemsPerPage: string) {
+        return this.todoRepository.search(searchText, userId, Number(page), Number(itemsPerPage))
+    }
+
+    async getAmountPagesByCriteria(searchText: string, userId: number, itemsPerPage: string) {
+        const amount = await this.todoRepository.getAmountItemsByCriteria(searchText, userId)
+        return Math.ceil(amount[0].count / Number(itemsPerPage));
+    }
 }

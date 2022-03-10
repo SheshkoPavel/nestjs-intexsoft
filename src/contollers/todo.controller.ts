@@ -37,4 +37,24 @@ export class TodoController {
         return this.todoService.get(getUserId(req))
     }
 
+    @UseGuards(AuthGuard('jwt'))
+    @Get("/search")
+    async searchText (
+        @Query('searchText') searchText: string,
+        @Query('page') page: string = '1',
+        @Query('itemsPerPage') itemsPerPage: string = '10',
+        @Req() req: Request
+    ): Promise<TodoDto[]> {
+        return this.todoService.search(searchText , getUserId(req), page, itemsPerPage)
+    }
+
+    @UseGuards(AuthGuard('jwt'))
+    @Get("/getAmountPagesByCriteria")
+    async getAmountPagesByCriteria (
+        @Query('searchText') searchText: string,
+        @Query('itemsPerPage') itemsPerPage: string = '10',
+        @Req() req: Request
+    ): Promise<number> {
+        return this.todoService.getAmountPagesByCriteria(searchText , getUserId(req), itemsPerPage)
+    }
 }
